@@ -25,11 +25,16 @@ public class DbAdapter {
         cv.put(DbConstants.NOTE_CONTENT, note.getContent());
         cv.put(DbConstants.NOTE_DATE, new Date().getTime());
 
-        try (SQLiteDatabase db = helper.getWritableDatabase()) {
+        SQLiteDatabase db = null;
+        try {
+            db = helper.getWritableDatabase();
             int id = (int) db.insert(DbConstants.NOTE_TABLE_NAME, DbConstants.NOTE_ID, cv);
             return getNote(id, true);
+        } finally {
+            if(db != null) {
+                db.close();
+            }
         }
-
     }
 
     public Note updateNote(Note note) {
@@ -40,40 +45,73 @@ public class DbAdapter {
         cv.put(DbConstants.NOTE_CONTENT, note.getContent());
         cv.put(DbConstants.NOTE_DATE, new Date().getTime());
 
-        try (SQLiteDatabase db = helper.getWritableDatabase()) {
+        SQLiteDatabase db = null;
+        try {
+            db = helper.getWritableDatabase();
             db.update(DbConstants.NOTE_TABLE_NAME, cv, DbConstants.NOTE_ID + "=?", new String[]{String.valueOf(id)});
             return getNote(id, true);
+        } finally {
+            if(db != null) {
+                db.close();
+            }
         }
     }
 
     public void deleteNote(int id) {
-        try (SQLiteDatabase db = helper.getWritableDatabase()) {
+        SQLiteDatabase db = null;
+        try {
+            db = helper.getWritableDatabase();
             db.delete(DbConstants.NOTE_TABLE_NAME, DbConstants.NOTE_ID + "=?", new String[]{String.valueOf(id)});
+        } finally {
+            if(db != null) {
+                db.close();
+            }
         }
     }
 
     public int getNotesCount() {
-        try (SQLiteDatabase db = helper.getReadableDatabase()) {
-            try (Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + DbConstants.NOTE_TABLE_NAME, null)) {
-                cursor.moveToFirst();
-                return cursor.getInt(0);
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = helper.getWritableDatabase();
+            cursor = db.rawQuery("SELECT COUNT(*) FROM " + DbConstants.NOTE_TABLE_NAME, null);
+            cursor.moveToFirst();
+            return cursor.getInt(0);
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
+            if(db != null) {
+                db.close();
             }
         }
     }
 
     public int getNoteIdFromPosition(int position) {
-        String[] columns = {DbConstants.NOTE_ID};
-        try (SQLiteDatabase db = helper.getReadableDatabase()) {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = helper.getWritableDatabase();
             //for position, we get the n-th element from a list of notes sorted by date desc, so they appear in that order in the view
-            try (Cursor cursor = db.query(DbConstants.NOTE_TABLE_NAME, columns, null, null, null, null, DbConstants.NOTE_DATE + " DESC", position + ",1")) {
-                cursor.moveToFirst();
-                return cursor.getInt(0);
+            String[] columns = {DbConstants.NOTE_ID};
+            cursor = db.query(DbConstants.NOTE_TABLE_NAME, columns, null, null, null, null, DbConstants.NOTE_DATE + " DESC", position + ",1");
+            cursor.moveToFirst();
+            return cursor.getInt(0);
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
+            if(db != null) {
+                db.close();
             }
         }
     }
 
     public Note getNote(int id, boolean withContent) {
-        try (SQLiteDatabase db = helper.getReadableDatabase()) {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = helper.getWritableDatabase();
             List<String> columns = new ArrayList<>(Arrays.asList(new String[]{DbConstants.NOTE_ID, DbConstants.NOTE_TITLE, DbConstants.NOTE_DATE}));
 
             //content is optional, because it can be quite large, and we don't need it for a list of notes
@@ -81,19 +119,25 @@ public class DbAdapter {
                 columns.add(DbConstants.NOTE_CONTENT);
             }
 
-            try (Cursor cursor = db.query(DbConstants.NOTE_TABLE_NAME, columns.toArray(new String[columns.size()]), DbConstants.NOTE_ID + "=?", new String[]{String.valueOf(id)}, null, null, null)) {
-                cursor.moveToFirst();
+            cursor = db.query(DbConstants.NOTE_TABLE_NAME, columns.toArray(new String[columns.size()]), DbConstants.NOTE_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+            cursor.moveToFirst();
 
-                Note note = new Note();
-                note.setId(cursor.getInt(0));
-                note.setTitle(cursor.getString(1));
-                note.setDate(new Date(cursor.getLong(2)));
+            Note note = new Note();
+            note.setId(cursor.getInt(0));
+            note.setTitle(cursor.getString(1));
+            note.setDate(new Date(cursor.getLong(2)));
 
-                if (withContent) {
-                    note.setContent(cursor.getString(3));
-                }
+            if (withContent) {
+                note.setContent(cursor.getString(3));
+            }
 
-                return note;
+            return note;
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
+            if(db != null) {
+                db.close();
             }
         }
     }
