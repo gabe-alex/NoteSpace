@@ -6,6 +6,9 @@ import android.text.format.DateUtils;
 import java.util.Date;
 
 public class Utils {
+    /**
+     * Overload for DateUtils.getRelativeTimespanString(), which also takes a transitionResolution param, for switching from relative to absolute DateTime
+     */
     public static CharSequence getRelativeTimespanString(Context context, long time, long minResolution, long transitionResolution) {
         long currentTime = new Date().getTime();
         long timeDiff = currentTime - time;

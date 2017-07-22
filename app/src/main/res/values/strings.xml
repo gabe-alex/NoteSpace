@@ -1,16 +1,10 @@
 <resources>
     <string name="app_name">NoteSpace</string>
-    <string name="title_activity_note">Note</string>
+
+    <string name="activity_note_title">Note</string>
     <string name="action_delete">Delete</string>
-
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-
-    <!-- Example settings for Data & Sync -->
-
-    <!-- Example settings for Notifications -->
-
-    <string name="note_content">Content</string>
     <string name="note_title">Title</string>
+    <string name="note_content">Content</string>
+
+    <string name="missing_title_placeholder">(no title)</string>
 </resources>
