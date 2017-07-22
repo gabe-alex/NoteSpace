@@ -10,7 +10,7 @@ public class Utils {
         long currentTime = new Date().getTime();
         long timeDiff = currentTime - time;
 
-        if(timeDiff < transitionResolution) {
+        if (timeDiff < transitionResolution) {
             return DateUtils.getRelativeTimeSpanString(time, currentTime, minResolution);
         } else {
             return DateUtils.formatDateTime(context, time, 0);

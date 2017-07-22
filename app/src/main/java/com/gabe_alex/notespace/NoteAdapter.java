@@ -11,15 +11,13 @@ import android.view.ViewGroup;
 import com.gabe_alex.notespace.database.DbAdapter;
 import com.gabe_alex.notespace.database.DbConstants;
 
-import java.text.SimpleDateFormat;
-
 public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     protected Context context;
     protected DbAdapter dbAdapter;
 
     public NoteAdapter(Context context) {
         this.context = context;
-        this.dbAdapter = new DbAdapter(context);;
+        this.dbAdapter = new DbAdapter(context);
     }
 
     @Override
@@ -32,12 +30,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     public void onBindViewHolder(NoteViewHolder holder, int position) {
         Note note = dbAdapter.getNoteFromPosition(position, false);
         holder.titleVTextIew.setText(!note.getTitle().isEmpty() ? note.getTitle() : "(no title)");
-        holder.dateTextIew.setText(Utils.getRelativeTimespanString(context,note.getDate().getTime(),DateUtils.SECOND_IN_MILLIS,DateUtils.WEEK_IN_MILLIS));
+        holder.dateTextIew.setText(Utils.getRelativeTimespanString(context, note.getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS));
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
-                Intent intent = new Intent(context,NoteActivity.class);
+                Intent intent = new Intent(context, NoteActivity.class);
                 intent.putExtra(DbConstants.NOTE_ID, dbAdapter.getNoteIdFromPosition(pos));
                 context.startActivity(intent);
             }

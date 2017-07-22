@@ -2,13 +2,10 @@ package com.gabe_alex.notespace;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 
 import com.gabe_alex.notespace.database.DbAdapter;
@@ -29,7 +26,7 @@ public class NoteActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         Bundle intentExtras = i.getExtras();
-        if(intentExtras != null) {
+        if (intentExtras != null) {
             int id = i.getExtras().getInt(DbConstants.NOTE_ID);
 
             note = dbAdapter.getNote(id, true);
@@ -60,7 +57,7 @@ public class NoteActivity extends AppCompatActivity {
 
         if (id == R.id.action_settings) {
             boolean noteExists = note.getId() != 0;
-            if(noteExists) {
+            if (noteExists) {
                 dbAdapter.deleteNote(note.getId());
             }
             finish();
@@ -78,21 +75,21 @@ public class NoteActivity extends AppCompatActivity {
         EditText contentText = (EditText) findViewById(R.id.editorNoteContent);
 
         boolean hasContent = !titleText.getText().toString().isEmpty() || !contentText.getText().toString().isEmpty();
-        boolean contentChanged = !titleText.getText().toString().equals(note.getTitle())  || !contentText.getText().toString().equals(note.getContent());
+        boolean contentChanged = !titleText.getText().toString().equals(note.getTitle()) || !contentText.getText().toString().equals(note.getContent());
         boolean noteExists = note.getId() != 0;
 
-        if(hasContent) {
+        if (hasContent) {
             note.setTitle(titleText.getText().toString());
             note.setContent(contentText.getText().toString());
 
             if (noteExists) {
-                if(contentChanged) {
+                if (contentChanged) {
                     dbAdapter.updateNote(note);
                 }
             } else {
                 dbAdapter.addNote(note);
             }
-        } else if(noteExists) {
+        } else if (noteExists) {
             dbAdapter.deleteNote(note.getId());
         }
     }

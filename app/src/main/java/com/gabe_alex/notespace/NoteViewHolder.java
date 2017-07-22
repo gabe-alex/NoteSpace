@@ -23,8 +23,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.itemClickListener.onItemClick(v, getLayoutPosition());
     }
 
-    public void setItemClickListener(ItemClickListener ic)
-    {
-        this.itemClickListener=ic;
+    public void setItemClickListener(ItemClickListener ic) {
+        this.itemClickListener = ic;
     }
 }

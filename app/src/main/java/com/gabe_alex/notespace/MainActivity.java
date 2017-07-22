@@ -9,10 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
     private NoteAdapter noteAdapter;
@@ -39,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
         notesList.setAdapter(noteAdapter);
     }
 
-    public void launchActivity(Class classType)
-    {
+    public void launchActivity(Class classType) {
         Intent intent = new Intent(this, classType);
         startActivity(intent);
     }
