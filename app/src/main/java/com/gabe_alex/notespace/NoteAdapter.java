@@ -3,6 +3,7 @@ package com.gabe_alex.notespace;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +30,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm, MMM dd");
-
         Note note = dbAdapter.getNoteFromPosition(position, false);
         holder.titleVTextIew.setText(!note.getTitle().isEmpty() ? note.getTitle() : "(no title)");
-        holder.dateTextIew.setText(dateFormat.format(note.getDate()));
+        holder.dateTextIew.setText(Utils.getRelativeTimespanString(context,note.getDate().getTime(),DateUtils.SECOND_IN_MILLIS,DateUtils.WEEK_IN_MILLIS));
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
