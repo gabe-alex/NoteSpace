@@ -107,29 +107,35 @@ public class DbAdapter {
         }
     }
 
-    public Note getNote(int id, boolean withContent) {
+    public Note getNote(int id, boolean withFullContent) {
         SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
             db = helper.getWritableDatabase();
             List<String> columns = new ArrayList<>(Arrays.asList(new String[]{DbConstants.NOTE_ID, DbConstants.NOTE_TITLE, DbConstants.NOTE_DATE}));
 
-            //content is optional, because it can be quite large, and we don't need it for a list of notes
-            if (withContent) {
-                columns.add(DbConstants.NOTE_CONTENT);
+            //get partial content for list
+            String contentColumn;
+            if (withFullContent) {
+                contentColumn = DbConstants.NOTE_CONTENT;
+            } else {
+                contentColumn = "substr(replace(replace(replace(" + DbConstants.NOTE_CONTENT + ",CHAR(10), ' '),CHAR(13), ' '),'  ', ' '),1,200) || '...' AS " + DbConstants.NOTE_CONTENT;
             }
 
-            cursor = db.query(DbConstants.NOTE_TABLE_NAME, columns.toArray(new String[columns.size()]), DbConstants.NOTE_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+            cursor = db.rawQuery("SELECT " +
+                    DbConstants.NOTE_ID + "," +
+                    DbConstants.NOTE_TITLE + "," +
+                    contentColumn + "," +
+                    DbConstants.NOTE_DATE +
+                    " FROM " + DbConstants.NOTE_TABLE_NAME +
+                    " WHERE " + DbConstants.NOTE_ID + "=" + id, null);
             cursor.moveToFirst();
 
             Note note = new Note();
             note.setId(cursor.getInt(0));
             note.setTitle(cursor.getString(1));
-            note.setDate(new Date(cursor.getLong(2)));
-
-            if (withContent) {
-                note.setContent(cursor.getString(3));
-            }
+            note.setContent(cursor.getString(2));
+            note.setDate(new Date(cursor.getLong(3)));
 
             return note;
         } finally {

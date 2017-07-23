@@ -7,6 +7,7 @@ import android.widget.TextView;
 public class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     TextView titleVTextIew;
     TextView dateTextIew;
+    TextView summaryTextIew;
     ItemClickListener itemClickListener;
 
     public NoteViewHolder(View itemView) {
@@ -14,6 +15,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
         titleVTextIew = (TextView) itemView.findViewById(R.id.listNoteTitle);
         dateTextIew = (TextView) itemView.findViewById(R.id.listNoteDate);
+        summaryTextIew = (TextView) itemView.findViewById(R.id.listNoteSummary);
 
         itemView.setOnClickListener(this);
     }

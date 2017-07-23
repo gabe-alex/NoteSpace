@@ -31,6 +31,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         Note note = dbAdapter.getNoteFromPosition(position, false);
         holder.titleVTextIew.setText(!note.getTitle().isEmpty() ? note.getTitle() : context.getString(R.string.missing_title_placeholder));
         holder.dateTextIew.setText(Utils.getRelativeTimespanString(context, note.getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS));
+        holder.summaryTextIew.setText(note.getContent());
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
